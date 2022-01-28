@@ -1,6 +1,6 @@
 package com.alves.logistica.exceptionhandler;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +28,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 				HttpHeaders headers, HttpStatus status, WebRequest request) {
 			List<Problema.Campo> campos = new ArrayList<>();
-			
 			for(ObjectError error : ex.getBindingResult().getAllErrors()) {
 				String nome = ((FieldError) error).getField();
 				String mensagem = messageSource.getMessage(error, LocaleContextHolder.getLocale());
@@ -38,7 +37,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 			Problema  problema = new Problema();
 			
 			problema.setStatus(status.value());
-			problema.setDataHora(LocalDateTime.now());
+			problema.setDataHora(OffsetDateTime.now());
 			problema.setTitulo("Campo invalido");
 			problema.setCampos(campos);
 			return handleExceptionInternal(ex, problema, headers, status, request);
